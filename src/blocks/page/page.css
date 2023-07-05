@@ -1,0 +1,15 @@
+.page {
+  max-width: 880px;
+  margin: 0 auto;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media(max-width: 420px) {
+  .page {
+    margin: 0 auto;
+    max-width: 320px;
+  }
+}

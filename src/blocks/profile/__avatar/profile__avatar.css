@@ -1,0 +1,30 @@
+.profile__avatar {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 30px;
+  
+}
+
+.profile__avatar::before  {
+  background-image: url(../../../images/penAvatar.svg);
+  color: white;
+  background-size: 26px 26px;
+  position: absolute;
+  content: '';
+
+
+}
+
+.profile__avatar:hover::before {
+  opacity: 0.5;
+  cursor: pointer;
+
+}
+
+@media(max-width: 710px) {
+  .profile__avatar {
+   margin: 0 0 26px 0;
+  }
+}

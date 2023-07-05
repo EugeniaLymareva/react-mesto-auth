@@ -1,0 +1,36 @@
+.update-avatar {
+  display: block;
+	position: relative;
+}
+
+.update-avatar:before {
+  width: 120px;
+  height: 120px;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url(../../images/penAvatar.svg) no-repeat center center;
+  opacity: 0;
+  z-index: 1;
+}
+
+.update-avatar:after {
+  width: 120px;
+  height: 120px;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, .8);
+  opacity: 0;
+}
+
+.update-avatar:hover:before,
+.update-avatar:hover:after {
+    opacity: 1;
+}
