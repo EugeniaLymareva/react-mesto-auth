@@ -1,4 +1,5 @@
 import React from 'react'
+import { Route, Routes, Navigate, useNavigate } from 'react-router-dom'
 import Header from './Header.js'
 import Main from './Main.js'
 import Footer from './Footer.js'
@@ -9,7 +10,10 @@ import api from '../utils/api'
 import EditProfilePopup from './EditProfilePopup.js'
 import EditAvatarPopup from './EditAvatarPopup.js'
 import AddPlacePopup from './AddPlacePopup.js'
-
+import Register from './Register.js'
+import Login from './Login.js'
+import ProtectedRoute from './ProtectedRoute.js'
+import * as auth from '../utils/auth.js'
 
 function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false)
@@ -21,6 +25,9 @@ function App() {
   const [cards, setCards] = React.useState([])
   const [currentUser, setCurrentUser] = React.useState({})
   const [isLoading, setIsLoading] = React.useState(false)
+  const [isLoggedIn, setIsLoggedIn] = React.useState(null)
+  const [userData, setUserData] = React.useState(null)
+  const navigate = useNavigate()
 
 
   React.useEffect(() => {
@@ -46,6 +53,43 @@ function App() {
 
     
 }, [])
+
+function handleLogin() {
+  handleCheckToken()
+}
+
+function handleCheckToken() {
+  const jwt = localStorage.getItem('jwt')
+  if (jwt) {
+    auth.checkToken(jwt)
+    .then((response) => {
+      if(!response) {
+        return
+      }
+      setUserData(response.data)
+      setIsLoggedIn(true)
+      navigate('/mesto')
+    })
+    .catch((err) => {
+      setIsLoggedIn(false)
+      console.log(err)
+    })
+
+    return
+  }
+
+  setIsLoggedIn(false)
+}
+
+React.useEffect(() => {
+  // if (isLoggedIn) {
+    handleCheckToken();
+  // }
+}, [])
+
+if (isLoggedIn === null) {
+  return <div className="popup"><p>Загрузка...</p></div>
+}
 
 function handleUpdateAvatar(userData) {
   setIsLoading(true)
@@ -148,18 +192,25 @@ function handleCardLike(card) {
     <CurrentUserContext.Provider value={currentUser}>
     <div className="App">
       <div className="page">
-        <Header />
-        <Main
-          cards={cards}
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onDeleteCard={handleDeleteCardClick}
-          onCardClick={handleCardClick}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
+        <Header userData={userData}/>
+        <Routes>
+          <Route path="/mesto" element={<ProtectedRoute
+            element={Main}
+            isLoggedIn={isLoggedIn}
+            cards={cards}
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+            onDeleteCard={handleDeleteCardClick}
+            onCardClick={handleCardClick}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete} 
+          />}/>
           
-        />
+          <Route path="/sign-in" element={<Login onLoggedIn={handleLogin} />} />
+          <Route path="/sign-up" element={<Register />} />
+          <Route path="/" element={isLoggedIn ? <Navigate to="/mesto" replace /> : <Navigate to="/sign-in" replace />} />
+        </Routes>
         <Footer />
 
         <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isLoading={isLoading} /> 
@@ -180,6 +231,8 @@ function handleCardLike(card) {
         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} isLoading={isLoading} />
 
         <ImagePopup isOpen={isImagePopupOpen} onClose={closeAllPopups} card={selectedCard} ></ImagePopup>
+
+        
       </div>   
     </div>
     </CurrentUserContext.Provider>
