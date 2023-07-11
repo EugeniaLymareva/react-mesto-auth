@@ -26,7 +26,7 @@ function Card(props) {
 
     return (
         <li className="element">
-            <img className="element__mask-group" src={props.link} alt="" onClick={handleClick} />
+            <img className="element__mask-group" src={props.link} alt={props.name} onClick={handleClick} />
             {isOwn && <button className="element__trash" type="button" onClick={handleDeleteClick} />}
             <div className="element__info">
                 <h2 className="element__title">{props.name}</h2>

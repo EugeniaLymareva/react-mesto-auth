@@ -31,7 +31,8 @@ function App() {
 
 
   React.useEffect(() => {
-    api.getUserInfo()
+    if (isLoggedIn) {
+      api.getUserInfo()
     .then(response => {
       setCurrentUser(response)
     })
@@ -50,12 +51,15 @@ function App() {
         )
     })
     .catch((err) => {console.log(err)})
-
+    }
+    return
     
-}, [])
+}, [isLoggedIn])
 
-function handleLogin() {
-  handleCheckToken()
+function handleLogin(userData) {
+  setUserData(userData)
+  setIsLoggedIn(true)
+  navigate('/mesto')
 }
 
 function handleCheckToken() {
@@ -66,9 +70,7 @@ function handleCheckToken() {
       if(!response) {
         return
       }
-      setUserData(response.data)
-      setIsLoggedIn(true)
-      navigate('/mesto')
+      handleLogin(response.data)
     })
     .catch((err) => {
       setIsLoggedIn(false)
@@ -82,9 +84,7 @@ function handleCheckToken() {
 }
 
 React.useEffect(() => {
-  // if (isLoggedIn) {
-    handleCheckToken();
-  // }
+  handleCheckToken()
 }, [])
 
 if (isLoggedIn === null) {
@@ -210,6 +210,7 @@ function handleCardLike(card) {
           <Route path="/sign-in" element={<Login onLoggedIn={handleLogin} />} />
           <Route path="/sign-up" element={<Register />} />
           <Route path="/" element={isLoggedIn ? <Navigate to="/mesto" replace /> : <Navigate to="/sign-in" replace />} />
+          <Route path="/*" element={isLoggedIn ? <Navigate to="/mesto" replace /> : <Navigate to="/sign-in" replace />} />
         </Routes>
         <Footer />
 

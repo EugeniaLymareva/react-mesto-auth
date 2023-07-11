@@ -24,7 +24,7 @@ function Login(props) {
         auth.login(formValue.email, formValue.password) 
         .then((data) => {
             localStorage.setItem('jwt', data.token)
-            props.onLoggedIn()
+            props.onLoggedIn({ email: formValue.email })
         })
         .catch((err) => {
             console.log(err)
@@ -35,7 +35,7 @@ function Login(props) {
         <div className='login'>
             <p className="login__title">Вход</p>
 
-            <form className="login__form" onSubmit={handleSubmit} noValidate>
+            <form className="login__form" onSubmit={handleSubmit}>
                 <input type="email" name="email" value={formValue.email} onChange={handleChange} className="login__input" id="email" placeholder="Email"required minLength="2" maxLength="40" />
                 <span className="login__error"></span>
 

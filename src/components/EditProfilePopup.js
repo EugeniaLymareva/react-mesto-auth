@@ -9,10 +9,10 @@ function EditProfilePopup(props) {
 
     React.useEffect(() => {
         if (Object.keys(currentUser).length !== 0) {
-            setName(currentUser.name);
+            setName(currentUser.name)
             setDescription(currentUser.about)
         }
-      }, [currentUser])
+      }, [currentUser, props.isOpen])
 
     function handleSubmit(e) {
         

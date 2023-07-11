@@ -45,7 +45,7 @@ function Register() {
             <div className='register'>
                 <p className="register__title">Регистрация</p>
 
-                <form onSubmit={handleSubmit} className="register__form" noValidate>
+                <form onSubmit={handleSubmit} className="register__form">
                     <input type="email" name="email" value={formValue.email} onChange={handleChange} className="register__input" id="email" placeholder="Email"required minLength="2" maxLength="40" />
                     <span className="register__error"></span>
 
